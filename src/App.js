@@ -11,11 +11,15 @@ export class App extends Component {
   state = {
     score: 0,
     totalScore: 0,
+    selectedImgs: [],
     clickImages
   }
 
   handleImgClick = id => {
-    alert("you clicked ID-" + id);
+    //Check if images has already been selected
+    //If no add imgID to selectedImgs else end game
+    //add 1 to score
+    //scamble images
     this.setState({
       clickImages: this.shuffle(this.state.clickImages)
     });
