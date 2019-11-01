@@ -10,18 +10,40 @@ import Row from "./components/Row";
 export class App extends Component {
   state = {
     score: 0,
-    totalScore: 0,
+    hiScore: 0,
     selectedImgs: [],
     clickImages
   }
 
   handleImgClick = id => {
     //Check if images has already been selected
+    if (this.state.selectedImgs.find(imgId => imgId === id)) {
+      this.endgame(this.state.score);
+    } else {
+      this.setState({
+        score: this.state.score + 1,
+        selectedImgs: [...this.state.selectedImgs, id]
+      });
+    }
     //If no add imgID to selectedImgs else end game
     //add 1 to score
     //scamble images
     this.setState({
       clickImages: this.shuffle(this.state.clickImages)
+    });
+  };
+
+  checkImg = () => {
+
+  };
+
+  endgame = (score) => {
+    let newHiScore = (score > this.state.hiScore) ? score : this.state.hiScore;
+
+    this.setState({
+      score: 0,
+      hiScore: newHiScore,
+      selectedImgs: []
     });
   };
 
@@ -47,15 +69,15 @@ export class App extends Component {
   render() {
 
     const images = this.state.clickImages.map(image => {
-      return <Image imgSrc={image.imageURL} imgAlt={image.name} imgID={image.id} clickImg={this.handleImgClick}/>;
+      return <Image imgSrc={image.imageURL} imgAlt={image.name} id={image.id} key={image.id} clickImg={this.handleImgClick}/>;
     });    
     
     return (
       <div>
         <div className="App">
-          <ScoreBar score={this.state.score} totalScore={this.state.totalScore}/>
+          <ScoreBar score={this.state.score} hiScore={this.state.hiScore}/>
           <Jumbotron />
-          <Container classProps="d-flex justify-content-center">
+          <Container classprops="d-flex justify-content-center">
             <Row>
               {this.shuffle(images)}
             </Row>
