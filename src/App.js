@@ -6,47 +6,46 @@ import Jumbotron from "./components/Jumbotron";
 import Image from "./components/Image";
 import Container from './components/Container';
 import Row from "./components/Row";
+import Alert from "./components/Alert";
 
 export class App extends Component {
   state = {
     score: 0,
     hiScore: 0,
+    endScore: 0,
     selectedImgs: [],
+    gameover: false,
     clickImages
   }
 
+  // When img is clicked, tests for endgame, otherwise updates state
   handleImgClick = id => {
-    //Check if images has already been selected
     if (this.state.selectedImgs.find(imgId => imgId === id)) {
       this.endgame(this.state.score);
     } else {
       this.setState({
         score: this.state.score + 1,
-        selectedImgs: [...this.state.selectedImgs, id]
+        selectedImgs: [...this.state.selectedImgs, id],
+        clickImages: this.shuffle(this.state.clickImages),
+        gameover: false
       });
-    }
-    //If no add imgID to selectedImgs else end game
-    //add 1 to score
-    //scamble images
-    this.setState({
-      clickImages: this.shuffle(this.state.clickImages)
-    });
+    }    
   };
 
-  checkImg = () => {
-
-  };
-
+  // ends each game round and resets score
   endgame = (score) => {
     let newHiScore = (score > this.state.hiScore) ? score : this.state.hiScore;
 
-    this.setState({
+    this.setState({      
+      endScore: this.state.score,
       score: 0,
       hiScore: newHiScore,
+      gameover: true,
       selectedImgs: []
     });
   };
 
+  // Randomizes the order of the images
   shuffle = (array) => {
     var currentIndex = array.length, temporaryValue, randomIndex;
   
@@ -68,6 +67,7 @@ export class App extends Component {
 
   render() {
 
+    // Displays an image for each object in the JSON data file
     const images = this.state.clickImages.map(image => {
       return <Image imgSrc={image.imageURL} imgAlt={image.name} id={image.id} key={image.id} clickImg={this.handleImgClick}/>;
     });    
@@ -77,11 +77,16 @@ export class App extends Component {
         <div className="App">
           <ScoreBar score={this.state.score} hiScore={this.state.hiScore}/>
           <Jumbotron />
+          <Container classprops="text-center display-4">
+            <Alert style={{ opacity: this.state.gameover ? 1 : 0 }} type="success">
+              Game Over. {(this.state.endScore === this.state.hiScore)?`New High Score: `: `Score: `}{this.state.endScore}
+            </Alert>
+          </Container>
           <Container classprops="d-flex justify-content-center">
             <Row>
               {this.shuffle(images)}
             </Row>
-          </Container>
+          </Container>          
         </div>
       </div>
     )
