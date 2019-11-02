@@ -7,6 +7,7 @@ import Image from "./components/Image";
 import Container from './components/Container';
 import Row from "./components/Row";
 import Alert from "./components/Alert";
+import FlexCenter from './components/FlexCenter';
 
 export class App extends Component {
   state = {
@@ -77,16 +78,16 @@ export class App extends Component {
         <div className="App">
           <ScoreBar score={this.state.score} hiScore={this.state.hiScore}/>
           <Jumbotron />
-          <Container classprops="text-center display-4">
+          <Container>
             <Alert style={{ opacity: this.state.gameover ? 1 : 0 }} type="success">
               Game Over. {(this.state.endScore === this.state.hiScore)?`New High Score: `: `Score: `}{this.state.endScore}
             </Alert>
-          </Container>
-          <Container classprops="d-flex justify-content-center">
+          <FlexCenter>
             <Row>
-              {this.shuffle(images)}
+                {this.shuffle(images)}
             </Row>
-          </Container>          
+          </FlexCenter>  
+          </Container>      
         </div>
       </div>
     )
